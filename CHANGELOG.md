@@ -1,3 +1,10 @@
+## 0.10.0
+* Fix a typo, using `leadingDivider` instead of `sperator`.
+* Ignore the error when _CodeAutocompleteState is disposed.
+* Opt range check code in method `_isWrapedByClosureSymbol`.
+* Check whether the viewport is still valid before auto scrolling.
+* Fix the keyboard appearance issue.
+
 ## 0.9.0
 * Disable autocorrection and smart text features in code editor.
 * Fix replace match will cause selection locating to the first match.
