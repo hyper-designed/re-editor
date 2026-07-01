@@ -1913,7 +1913,7 @@ class _CodeLineEditingControllerImpl extends ValueNotifier<CodeLineEditingValue>
     if (text.isEmpty) {
       return false;
     }
-    if (offset == 0 || offset == text.length) {
+    if (offset - 1 < 0 || offset + 1 > text.length) {
       return false;
     }
     return _kClosureAndQuates.contains(text.substring(offset - 1, offset + 1));
