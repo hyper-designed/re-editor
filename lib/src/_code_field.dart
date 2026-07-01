@@ -629,6 +629,11 @@ class _CodeFieldRender extends RenderBox implements MouseTrackerAnnotation {
       }
       if (tryCount < 10) {
         SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+          // Check whether the viewport is still valid.
+          final ViewportOffset viewport = _verticalViewport;
+          if (viewport is ScrollPosition && viewport.context.notificationContext == null) {
+            return;
+          }
           makePositionVisible(position, tryCount + 1);
         });
       }
@@ -676,6 +681,11 @@ class _CodeFieldRender extends RenderBox implements MouseTrackerAnnotation {
       }
       if (tryCount < 10) {
         SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+          // Check whether the viewport is still valid.
+          final ViewportOffset viewport = _verticalViewport;
+          if (viewport is ScrollPosition && viewport.context.notificationContext == null) {
+            return;
+          }
           makePositionCenterIfInvisible(position, tryCount: tryCount + 1);
         });
       }
