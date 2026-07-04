@@ -1,4 +1,4 @@
-part of re_editor;
+part of 're_editor.dart';
 
 class _DefaultCodeAutocompletePromptsBuilder
     implements DefaultCodeAutocompletePromptsBuilder {
@@ -9,11 +9,12 @@ class _DefaultCodeAutocompletePromptsBuilder
 
   final Set<CodePrompt> _allKeywordPrompts = {};
 
-  _DefaultCodeAutocompletePromptsBuilder(
-      {this.language,
-      required this.keywordPrompts,
-      required this.directPrompts,
-      required this.relatedPrompts}) {
+  _DefaultCodeAutocompletePromptsBuilder({
+    this.language,
+    required this.keywordPrompts,
+    required this.directPrompts,
+    required this.relatedPrompts,
+  }) {
     _allKeywordPrompts.addAll(keywordPrompts);
     _allKeywordPrompts.addAll(directPrompts);
     final dynamic keywords = language?.keywords;
@@ -21,29 +22,36 @@ class _DefaultCodeAutocompletePromptsBuilder
       final dynamic keywordList = keywords['keyword'];
       if (keywordList is List) {
         _allKeywordPrompts.addAll(
-            keywordList.map((keyword) => CodeKeywordPrompt(word: keyword)));
+          keywordList.map((keyword) => CodeKeywordPrompt(word: keyword)),
+        );
       }
       final dynamic builtInList = keywords['built_in'];
       if (builtInList is List) {
         _allKeywordPrompts.addAll(
-            builtInList.map((keyword) => CodeKeywordPrompt(word: keyword)));
+          builtInList.map((keyword) => CodeKeywordPrompt(word: keyword)),
+        );
       }
       final dynamic literalList = keywords['literal'];
       if (literalList is List) {
         _allKeywordPrompts.addAll(
-            literalList.map((keyword) => CodeKeywordPrompt(word: keyword)));
+          literalList.map((keyword) => CodeKeywordPrompt(word: keyword)),
+        );
       }
       final dynamic typeList = keywords['type'];
       if (typeList is List) {
         _allKeywordPrompts.addAll(
-            typeList.map((keyword) => CodeKeywordPrompt(word: keyword)));
+          typeList.map((keyword) => CodeKeywordPrompt(word: keyword)),
+        );
       }
     }
   }
 
   @override
   CodeAutocompleteEditingValue? build(
-      BuildContext context, CodeLine codeLine, CodeLineSelection selection) {
+    BuildContext context,
+    CodeLine codeLine,
+    CodeLineSelection selection,
+  ) {
     final String text = codeLine.text;
     final Characters charactersBefore =
         text.substring(0, selection.extentOffset).characters;
@@ -68,9 +76,10 @@ class _DefaultCodeAutocompletePromptsBuilder
           break;
         }
       }
-      final String target = charactersBefore
-          .getRange(start + 1, charactersBefore.length - 1)
-          .string;
+      final String target =
+          charactersBefore
+              .getRange(start + 1, charactersBefore.length - 1)
+              .string;
       prompts = relatedPrompts[target] ?? const [];
     } else {
       int start = charactersBefore.length - 1;
@@ -94,7 +103,7 @@ class _DefaultCodeAutocompletePromptsBuilder
         final String target = charactersBefore.getRange(start + 1, mark).string;
         prompts =
             relatedPrompts[target]?.where((prompt) => prompt.match(input)) ??
-                const [];
+            const [];
       } else {
         prompts = _allKeywordPrompts.where((prompt) => prompt.match(input));
       }
@@ -103,7 +112,10 @@ class _DefaultCodeAutocompletePromptsBuilder
       return null;
     }
     return CodeAutocompleteEditingValue(
-        input: input, prompts: prompts.toList(), index: 0);
+      input: input,
+      prompts: prompts.toList(),
+      index: 0,
+    );
   }
 }
 
@@ -150,9 +162,7 @@ class _CodeAutocompleteState extends State<_CodeAutocomplete> {
         } else if (newIndex >= value.prompts.length) {
           newIndex = 0;
         }
-        _notifier?.value = value.copyWith(
-          index: newIndex,
-        );
+        _notifier?.value = value.copyWith(index: newIndex);
         return intent;
       },
     );
@@ -175,10 +185,13 @@ class _CodeAutocompleteState extends State<_CodeAutocomplete> {
 
   @override
   Widget build(BuildContext context) {
-    return Actions(actions: {
-      CodeShortcutCursorMoveIntent: _navigateAction,
-      CodeShortcutNewLineIntent: _selectAction,
-    }, child: widget.child);
+    return Actions(
+      actions: {
+        CodeShortcutCursorMoveIntent: _navigateAction,
+        CodeShortcutNewLineIntent: _selectAction,
+      },
+      child: widget.child,
+    );
   }
 
   void show({
@@ -189,12 +202,13 @@ class _CodeAutocompleteState extends State<_CodeAutocomplete> {
     required ValueChanged<CodeAutocompleteResult> onAutocomplete,
   }) {
     dismiss();
-    final CodeAutocompleteEditingValue? autocompleteEditingValue =
-        widget.promptsBuilder.build(
-      context,
-      value.codeLines[value.selection.extentIndex],
-      value.selection,
-    );
+    final CodeAutocompleteEditingValue? autocompleteEditingValue = widget
+        .promptsBuilder
+        .build(
+          context,
+          value.codeLines[value.selection.extentIndex],
+          value.selection,
+        );
     if (autocompleteEditingValue == null) {
       return;
     }
@@ -219,10 +233,15 @@ class _CodeAutocompleteState extends State<_CodeAutocomplete> {
     _selectAction.setEnabled(false);
   }
 
-  Widget _buildWidget(BuildContext context, LayerLink layerLink,
-      Offset position, double lineHeight) {
-    final PreferredSizeWidget child =
-        widget.viewBuilder(context, _notifier!, (result) {
+  Widget _buildWidget(
+    BuildContext context,
+    LayerLink layerLink,
+    Offset position,
+    double lineHeight,
+  ) {
+    final PreferredSizeWidget child = widget.viewBuilder(context, _notifier!, (
+      result,
+    ) {
       _onAutocomplete?.call(result);
     });
     final Size screenSize = MediaQuery.of(context).size;
@@ -243,18 +262,17 @@ class _CodeAutocompleteState extends State<_CodeAutocomplete> {
       showWhenUnlinked: false,
       offset: Offset(offsetX, offsetY),
       child: Align(
-          alignment: Alignment.topLeft,
-          child: Material(
-            color: Colors.transparent,
-            child: TapRegion(
-                onTapOutside: (event) {
-                  dismiss();
-                },
-                child: CodeEditorTapRegion(
-                    child: ExcludeSemantics(
-                  child: child,
-                ))),
-          )),
+        alignment: Alignment.topLeft,
+        child: Material(
+          color: Colors.transparent,
+          child: TapRegion(
+            onTapOutside: (event) {
+              dismiss();
+            },
+            child: CodeEditorTapRegion(child: ExcludeSemantics(child: child)),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -11,16 +11,16 @@ void main() {
     });
     test('get codeLines', () {
       expect(
-          'abc\nfoo\nbar'.codeLines,
-          CodeLines.of(
-              const [CodeLine('abc'), CodeLine('foo'), CodeLine('bar')]));
+        'abc\nfoo\nbar'.codeLines,
+        CodeLines.of(const [CodeLine('abc'), CodeLine('foo'), CodeLine('bar')]),
+      );
     });
 
     test('get codeLinesAsync', () async {
       expect(
-          await 'abc\nfoo\nbar'.codeLinesAsync,
-          CodeLines.of(
-              const [CodeLine('abc'), CodeLine('foo'), CodeLine('bar')]));
+        await 'abc\nfoo\nbar'.codeLinesAsync,
+        CodeLines.of(const [CodeLine('abc'), CodeLine('foo'), CodeLine('bar')]),
+      );
     });
   });
 }

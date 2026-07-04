@@ -6,16 +6,22 @@ void main() {
   group('CodeLinePosition constructor ', () {
     test('`CodeLinePosition()`', () {
       const CodeLinePosition position = CodeLinePosition(
-          index: 1, offset: 2, affinity: TextAffinity.upstream);
+        index: 1,
+        offset: 2,
+        affinity: TextAffinity.upstream,
+      );
       expect(position.index, 1);
       expect(position.offset, 2);
       expect(position.affinity, TextAffinity.upstream);
     });
     test('`CodeLinePosition.from()`', () {
       final CodeLinePosition position = CodeLinePosition.from(
-          index: 1,
-          position:
-              const TextPosition(offset: 2, affinity: TextAffinity.upstream));
+        index: 1,
+        position: const TextPosition(
+          offset: 2,
+          affinity: TextAffinity.upstream,
+        ),
+      );
       expect(position.index, 1);
       expect(position.offset, 2);
       expect(position.affinity, TextAffinity.upstream);
@@ -25,25 +31,47 @@ void main() {
   group('CodeLinePosition method ', () {
     test('`copyWith`', () {
       const CodeLinePosition position = CodeLinePosition(
-          index: 1, offset: 2, affinity: TextAffinity.downstream);
+        index: 1,
+        offset: 2,
+        affinity: TextAffinity.downstream,
+      );
       expect(position.copyWith(), position);
       expect(
-          position.copyWith(index: 0),
-          const CodeLinePosition(
-              index: 0, offset: 2, affinity: TextAffinity.downstream));
+        position.copyWith(index: 0),
+        const CodeLinePosition(
+          index: 0,
+          offset: 2,
+          affinity: TextAffinity.downstream,
+        ),
+      );
       expect(
-          position.copyWith(offset: 0),
-          const CodeLinePosition(
-              index: 1, offset: 0, affinity: TextAffinity.downstream));
+        position.copyWith(offset: 0),
+        const CodeLinePosition(
+          index: 1,
+          offset: 0,
+          affinity: TextAffinity.downstream,
+        ),
+      );
       expect(
-          position.copyWith(affinity: TextAffinity.upstream),
-          const CodeLinePosition(
-              index: 1, offset: 2, affinity: TextAffinity.upstream));
+        position.copyWith(affinity: TextAffinity.upstream),
+        const CodeLinePosition(
+          index: 1,
+          offset: 2,
+          affinity: TextAffinity.upstream,
+        ),
+      );
       expect(
-          position.copyWith(
-              index: 0, offset: 0, affinity: TextAffinity.downstream),
-          const CodeLinePosition(
-              index: 0, offset: 0, affinity: TextAffinity.downstream));
+        position.copyWith(
+          index: 0,
+          offset: 0,
+          affinity: TextAffinity.downstream,
+        ),
+        const CodeLinePosition(
+          index: 0,
+          offset: 0,
+          affinity: TextAffinity.downstream,
+        ),
+      );
     });
   });
 
@@ -51,24 +79,36 @@ void main() {
     test('`==`', () {
       {
         final CodeLinePosition position1 = CodeLinePosition.from(
-            index: 1,
-            position:
-                const TextPosition(offset: 2, affinity: TextAffinity.upstream));
+          index: 1,
+          position: const TextPosition(
+            offset: 2,
+            affinity: TextAffinity.upstream,
+          ),
+        );
         final CodeLinePosition position2 = CodeLinePosition.from(
-            index: 1,
-            position:
-                const TextPosition(offset: 2, affinity: TextAffinity.upstream));
+          index: 1,
+          position: const TextPosition(
+            offset: 2,
+            affinity: TextAffinity.upstream,
+          ),
+        );
         expect(position1, position2);
       }
       {
         final CodeLinePosition position1 = CodeLinePosition.from(
-            index: 1,
-            position:
-                const TextPosition(offset: 1, affinity: TextAffinity.upstream));
+          index: 1,
+          position: const TextPosition(
+            offset: 1,
+            affinity: TextAffinity.upstream,
+          ),
+        );
         final CodeLinePosition position2 = CodeLinePosition.from(
-            index: 2,
-            position:
-                const TextPosition(offset: 2, affinity: TextAffinity.upstream));
+          index: 2,
+          position: const TextPosition(
+            offset: 2,
+            affinity: TextAffinity.upstream,
+          ),
+        );
         expect(position1 == position2, false);
       }
     });

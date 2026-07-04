@@ -1,3 +1,8 @@
+## 0.11.0
+
+- Upgrade isolate_manager to v6.3.2 for WASM compatibility.
+- Code format and lint fixes.
+
 ## 0.10.0
 * Fix a typo, using `leadingDivider` instead of `sperator`.
 * Ignore the error when _CodeAutocompleteState is disposed.

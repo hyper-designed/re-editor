@@ -1,24 +1,22 @@
-part of re_editor;
+part of 're_editor.dart';
 
 const int _kDefaultMinNumberCount = 3;
 const Size _kDefaultChunkIndicatorSize = Size(7, 7);
 
 typedef CodeIndicatorValueNotifier = ValueNotifier<CodeIndicatorValue?>;
-typedef CodeIndicatorBuilder = Widget Function(
-  BuildContext context,
-  CodeLineEditingController editingController,
-  CodeChunkController chunkController,
-  CodeIndicatorValueNotifier notifier,
-);
+typedef CodeIndicatorBuilder =
+    Widget Function(
+      BuildContext context,
+      CodeLineEditingController editingController,
+      CodeChunkController chunkController,
+      CodeIndicatorValueNotifier notifier,
+    );
 
 class CodeIndicatorValue {
   final List<CodeLineRenderParagraph> paragraphs;
   final int focusedIndex;
 
-  CodeIndicatorValue({
-    required this.paragraphs,
-    this.focusedIndex = -1,
-  });
+  CodeIndicatorValue({required this.paragraphs, this.focusedIndex = -1});
 
   @override
   int get hashCode => Object.hashAll([paragraphs, focusedIndex]);
@@ -74,7 +72,9 @@ class DefaultCodeLineNumber extends LeafRenderObjectWidget {
 
   @override
   void updateRenderObject(
-      BuildContext context, covariant CodeLineNumberRenderObject renderObject) {
+    BuildContext context,
+    covariant CodeLineNumberRenderObject renderObject,
+  ) {
     renderObject
       ..controller = controller
       ..notifier = notifier
@@ -89,7 +89,8 @@ class DefaultCodeLineNumber extends LeafRenderObjectWidget {
         context.findAncestorWidgetOfExactType<_CodeEditable>();
     assert(editor != null);
     return editor!.textStyle.copyWith(
-        color: focused ? null : editor.textStyle.color?.withAlpha(128));
+      color: focused ? null : editor.textStyle.color?.withAlpha(128),
+    );
   }
 }
 
@@ -117,25 +118,25 @@ class DefaultCodeChunkIndicator extends LeafRenderObjectWidget {
         width: width,
         controller: controller,
         notifier: notifier,
-        painter: painter ??
-            DefaultCodeChunkIndicatorPainter(
-              color: _useCodeTextColor(context),
-            ),
+        painter:
+            painter ??
+            DefaultCodeChunkIndicatorPainter(color: _useCodeTextColor(context)),
         collapseIndicatorVisible: collapseIndicatorVisible,
         expandIndicatorVisible: expandIndicatorVisible,
       );
 
   @override
-  void updateRenderObject(BuildContext context,
-      covariant CodeChunkIndicatorRenderObject renderObject) {
+  void updateRenderObject(
+    BuildContext context,
+    covariant CodeChunkIndicatorRenderObject renderObject,
+  ) {
     renderObject
       ..width = width
       ..controller = controller
       ..notifier = notifier
-      ..painter = painter ??
-          DefaultCodeChunkIndicatorPainter(
-            color: _useCodeTextColor(context),
-          )
+      ..painter =
+          painter ??
+          DefaultCodeChunkIndicatorPainter(color: _useCodeTextColor(context))
       ..collapseIndicatorVisible = collapseIndicatorVisible
       ..expandIndicatorVisible = expandIndicatorVisible;
     super.updateRenderObject(context, renderObject);
@@ -161,8 +162,10 @@ class DefaultCodeChunkIndicatorPainter implements CodeChunkIndicatorPainter {
 
   late final Paint _paint;
 
-  DefaultCodeChunkIndicatorPainter(
-      {this.color, this.size = _kDefaultChunkIndicatorSize}) {
+  DefaultCodeChunkIndicatorPainter({
+    this.color,
+    this.size = _kDefaultChunkIndicatorSize,
+  }) {
     _paint = Paint();
     if (color != null) {
       _paint.color = color!;
@@ -175,13 +178,19 @@ class DefaultCodeChunkIndicatorPainter implements CodeChunkIndicatorPainter {
       return;
     }
     final Path path = Path();
-    path.moveTo((container.width - size.width) / 2,
-        (container.height - size.height) / 2);
-    path.lineTo((container.width + size.width) / 2,
-        (container.height - size.height) / 2);
+    path.moveTo(
+      (container.width - size.width) / 2,
+      (container.height - size.height) / 2,
+    );
+    path.lineTo(
+      (container.width + size.width) / 2,
+      (container.height - size.height) / 2,
+    );
     path.lineTo(container.width / 2, (container.height + size.height) / 2);
-    path.lineTo((container.width - size.width) / 2,
-        (container.height - size.height) / 2);
+    path.lineTo(
+      (container.width - size.width) / 2,
+      (container.height - size.height) / 2,
+    );
     canvas.drawPath(path, _paint);
   }
 
@@ -191,13 +200,19 @@ class DefaultCodeChunkIndicatorPainter implements CodeChunkIndicatorPainter {
       return;
     }
     final Path path = Path();
-    path.moveTo((container.width - size.width) / 2,
-        (container.height - size.height) / 2);
+    path.moveTo(
+      (container.width - size.width) / 2,
+      (container.height - size.height) / 2,
+    );
     path.lineTo((container.width + size.width) / 2, container.height / 2);
-    path.lineTo((container.width - size.width) / 2,
-        (container.height + size.height) / 2);
-    path.lineTo((container.width - size.width) / 2,
-        (container.height - size.height) / 2);
+    path.lineTo(
+      (container.width - size.width) / 2,
+      (container.height + size.height) / 2,
+    );
+    path.lineTo(
+      (container.width - size.width) / 2,
+      (container.height - size.height) / 2,
+    );
     canvas.drawPath(path, _paint);
   }
 }

@@ -1,7 +1,11 @@
-part of re_editor;
+part of 're_editor.dart';
 
-typedef CodeScrollbarBuilder = Widget Function(
-    BuildContext context, Widget child, ScrollableDetails details);
+typedef CodeScrollbarBuilder =
+    Widget Function(
+      BuildContext context,
+      Widget child,
+      ScrollableDetails details,
+    );
 
 class CodeScrollController {
   final ScrollController verticalScroller;
@@ -12,8 +16,8 @@ class CodeScrollController {
   CodeScrollController({
     ScrollController? verticalScroller,
     ScrollController? horizontalScroller,
-  })  : verticalScroller = verticalScroller ?? ScrollController(),
-        horizontalScroller = horizontalScroller ?? ScrollController();
+  }) : verticalScroller = verticalScroller ?? ScrollController(),
+       horizontalScroller = horizontalScroller ?? ScrollController();
 
   void makeCenterIfInvisible(CodeLinePosition position) {
     _render?.makePositionCenterIfInvisible(position);

@@ -1,7 +1,11 @@
-part of re_editor;
+part of 're_editor.dart';
 
-typedef CodeFindBuilder = PreferredSizeWidget Function(
-    BuildContext context, CodeFindController controller, bool readonly);
+typedef CodeFindBuilder =
+    PreferredSizeWidget Function(
+      BuildContext context,
+      CodeFindController controller,
+      bool readonly,
+    );
 
 class CodeFindValue {
   final CodeFindOption option;
@@ -17,14 +21,14 @@ class CodeFindValue {
   });
 
   const CodeFindValue.empty()
-      : this(
-          option: const CodeFindOption(
-            pattern: '',
-            caseSensitive: false,
-            regex: false,
-          ),
-          replaceMode: false,
-        );
+    : this(
+        option: const CodeFindOption(
+          pattern: '',
+          caseSensitive: false,
+          regex: false,
+        ),
+        replaceMode: false,
+      );
 
   CodeFindValue copyWith({
     CodeFindOption? option,
@@ -72,11 +76,7 @@ class CodeFindOption {
     required this.regex,
   });
 
-  CodeFindOption copyWith({
-    String? pattern,
-    bool? caseSensitive,
-    bool? regex,
-  }) {
+  CodeFindOption copyWith({String? pattern, bool? caseSensitive, bool? regex}) {
     return CodeFindOption(
       pattern: pattern ?? this.pattern,
       caseSensitive: caseSensitive ?? this.caseSensitive,
@@ -173,9 +173,10 @@ class CodeFindResult {
 }
 
 abstract class CodeFindController extends ValueNotifier<CodeFindValue?> {
-  factory CodeFindController(CodeLineEditingController controller,
-          [CodeFindValue? value]) =>
-      _CodeFindControllerImpl(controller, value);
+  factory CodeFindController(
+    CodeLineEditingController controller, [
+    CodeFindValue? value,
+  ]) => _CodeFindControllerImpl(controller, value);
 
   TextEditingController get findInputController;
 

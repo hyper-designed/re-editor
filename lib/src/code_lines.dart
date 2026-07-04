@@ -1,4 +1,4 @@
-part of re_editor;
+part of 're_editor.dart';
 
 const int _kCodeLineSegamentDefaultSize = 256;
 
@@ -47,14 +47,18 @@ class CodeLines {
   CodeLine get last => segments.last.last;
 
   int get length => segments.fold(
-      0, (previousValue, element) => previousValue += element.length);
+    0,
+    (previousValue, element) => previousValue += element.length,
+  );
 
   bool get isEmpty => segments.isEmpty || length == 0;
 
   bool get isNotEmpty => !isEmpty;
 
   int get lineCount => segments.fold(
-      0, (previousValue, element) => previousValue += element.lineCount);
+    0,
+    (previousValue, element) => previousValue += element.lineCount,
+  );
 
   CodeLine operator [](int index) {
     int offset = 0;
@@ -176,8 +180,10 @@ class CodeLines {
     if (length1 != length2) {
       return false;
     }
-    final int minSegmentLength =
-        min(segments.length, codeLines.segments.length);
+    final int minSegmentLength = min(
+      segments.length,
+      codeLines.segments.length,
+    );
     int offset = 0;
     for (int i = 0; i < minSegmentLength; i++) {
       if (segments[i].length != codeLines.segments[i].length) {
@@ -365,15 +371,18 @@ class CodeLineSegment with ListMixin<CodeLine> {
 
   const CodeLineSegment({required this.codeLines, this.dirty = false});
 
-  factory CodeLineSegment.of(
-          {required List<CodeLine> codeLines, bool dirty = false}) =>
-      _CodeLineSegmentQuckLineCount(codeLines: codeLines, dirty: dirty);
+  factory CodeLineSegment.of({
+    required List<CodeLine> codeLines,
+    bool dirty = false,
+  }) => _CodeLineSegmentQuckLineCount(codeLines: codeLines, dirty: dirty);
 
   @override
   int get length => codeLines.length;
 
   int get lineCount => codeLines.fold(
-      0, (previousValue, element) => previousValue += element.lineCount);
+    0,
+    (previousValue, element) => previousValue += element.lineCount,
+  );
 
   @override
   CodeLine operator [](int index) {
@@ -413,12 +422,11 @@ class CodeLineSegment with ListMixin<CodeLine> {
   CodeLineSegment clone([int start = 0, int? end]) =>
       CodeLineSegment.of(codeLines: codeLines.sublist(start, end));
 
-  CodeLineSegment copyWith({
-    List<CodeLine>? codeLines,
-    bool? dirty,
-  }) {
+  CodeLineSegment copyWith({List<CodeLine>? codeLines, bool? dirty}) {
     return CodeLineSegment.of(
-        codeLines: codeLines ?? this.codeLines, dirty: dirty ?? this.dirty);
+      codeLines: codeLines ?? this.codeLines,
+      dirty: dirty ?? this.dirty,
+    );
   }
 
   @override

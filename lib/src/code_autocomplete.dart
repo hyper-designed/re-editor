@@ -1,4 +1,4 @@
-part of re_editor;
+part of 're_editor.dart';
 
 /// Define code autocomplate prompt information.
 ///
@@ -134,20 +134,29 @@ class CodeFunctionPrompt extends CodePrompt {
 
   @override
   int get hashCode => Object.hash(
-      word, type, parameters, optionalParameters, customAutocomplete);
+    word,
+    type,
+    parameters,
+    optionalParameters,
+    customAutocomplete,
+  );
 }
 
 /// The autocomplete result selected by user, the editor will apply this
 /// to code content.
 class CodeAutocompleteResult {
-  const CodeAutocompleteResult(
-      {required this.input, required this.word, required this.selection});
+  const CodeAutocompleteResult({
+    required this.input,
+    required this.word,
+    required this.selection,
+  });
 
   factory CodeAutocompleteResult.fromWord(String word) {
     return CodeAutocompleteResult(
-        input: '',
-        word: word,
-        selection: TextSelection.collapsed(offset: word.length));
+      input: '',
+      word: word,
+      selection: TextSelection.collapsed(offset: word.length),
+    );
   }
 
   /// The autocomplete text.
@@ -207,10 +216,12 @@ class CodeAutocompleteEditingValue {
 }
 
 /// Builds the overlay autocomplete prompts view.
-typedef CodeAutocompleteWidgetBuilder = PreferredSizeWidget Function(
-    BuildContext context,
-    ValueNotifier<CodeAutocompleteEditingValue> notifier,
-    ValueChanged<CodeAutocompleteResult> onSelected);
+typedef CodeAutocompleteWidgetBuilder =
+    PreferredSizeWidget Function(
+      BuildContext context,
+      ValueNotifier<CodeAutocompleteEditingValue> notifier,
+      ValueChanged<CodeAutocompleteResult> onSelected,
+    );
 
 /// The autocomplete prompts builder.
 abstract class CodeAutocompletePromptsBuilder {
@@ -231,13 +242,12 @@ abstract class DefaultCodeAutocompletePromptsBuilder
     List<CodeKeywordPrompt> keywordPrompts = const [],
     List<CodePrompt> directPrompts = const [],
     Map<String, List<CodePrompt>> relatedPrompts = const {},
-  }) =>
-      _DefaultCodeAutocompletePromptsBuilder(
-        language: language,
-        keywordPrompts: keywordPrompts,
-        directPrompts: directPrompts,
-        relatedPrompts: relatedPrompts,
-      );
+  }) => _DefaultCodeAutocompletePromptsBuilder(
+    language: language,
+    keywordPrompts: keywordPrompts,
+    directPrompts: directPrompts,
+    relatedPrompts: relatedPrompts,
+  );
 }
 
 /// A widget enables code autocomplete for [CodeEditor].
@@ -285,6 +295,9 @@ class CodeAutocomplete extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _CodeAutocomplete(
-        viewBuilder: viewBuilder, promptsBuilder: promptsBuilder, child: child);
+      viewBuilder: viewBuilder,
+      promptsBuilder: promptsBuilder,
+      child: child,
+    );
   }
 }

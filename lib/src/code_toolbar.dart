@@ -1,12 +1,13 @@
-part of re_editor;
+part of 're_editor.dart';
 
-typedef ToolbarMenuBuilder = Widget Function({
-  required BuildContext context,
-  required TextSelectionToolbarAnchors anchors,
-  required CodeLineEditingController controller,
-  required VoidCallback onDismiss,
-  required VoidCallback onRefresh,
-});
+typedef ToolbarMenuBuilder =
+    Widget Function({
+      required BuildContext context,
+      required TextSelectionToolbarAnchors anchors,
+      required CodeLineEditingController controller,
+      required VoidCallback onDismiss,
+      required VoidCallback onRefresh,
+    });
 
 abstract class SelectionToolbarController {
   void show({
@@ -23,7 +24,7 @@ abstract class SelectionToolbarController {
 
 abstract class MobileSelectionToolbarController
     implements SelectionToolbarController {
-  factory MobileSelectionToolbarController(
-          {required ToolbarMenuBuilder builder}) =>
-      _MobileSelectionToolbarController(builder: builder);
+  factory MobileSelectionToolbarController({
+    required ToolbarMenuBuilder builder,
+  }) => _MobileSelectionToolbarController(builder: builder);
 }

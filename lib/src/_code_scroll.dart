@@ -1,4 +1,4 @@
-part of re_editor;
+part of 're_editor.dart';
 
 const double _kScrollbarThickness = 8.0;
 
@@ -8,11 +8,12 @@ class _CodeScrollable extends StatelessWidget {
   final ViewportBuilder viewportBuilder;
   final CodeScrollbarBuilder? scrollbarBuilder;
 
-  const _CodeScrollable(
-      {required this.axisDirection,
-      this.controller,
-      required this.viewportBuilder,
-      this.scrollbarBuilder});
+  const _CodeScrollable({
+    required this.axisDirection,
+    this.controller,
+    required this.viewportBuilder,
+    this.scrollbarBuilder,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,10 @@ class _ScrollBehavior extends MaterialScrollBehavior {
 
   @override
   Widget buildScrollbar(
-      BuildContext context, Widget child, ScrollableDetails details) {
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
     final Widget? scrollbar = scrollbarBuilder?.call(context, child, details);
     if (scrollbar != null) {
       return scrollbar;
@@ -76,19 +80,15 @@ class _RawScrollbar extends RawScrollbar {
 
   const _RawScrollbar({
     required this.physics,
-    required Widget child,
-    required ScrollController controller,
-    ScrollbarOrientation? scrollbarOrientation,
-    required bool thumbVisibility,
+    required super.child,
+    required ScrollController super.controller,
+    super.scrollbarOrientation,
+    required bool super.thumbVisibility,
   }) : super(
-          controller: controller,
-          scrollbarOrientation: scrollbarOrientation,
-          thumbVisibility: thumbVisibility,
-          thickness: _kScrollbarThickness,
-          radius: const Radius.circular(10),
-          crossAxisMargin: 2,
-          child: child,
-        );
+         thickness: _kScrollbarThickness,
+         radius: const Radius.circular(10),
+         crossAxisMargin: 2,
+       );
 
   @override
   RawScrollbarState<_RawScrollbar> createState() => _RawScrollbarState();
@@ -108,9 +108,12 @@ class _RawScrollbarState extends RawScrollbarState<_RawScrollbar> {
   @override
   void handleThumbPressUpdate(Offset localPosition) {
     if (getScrollbarDirection() == Axis.vertical) {
-      widget.physics.setScrollPosition(downOffset! +
-          scrollbarPainter
-              .getTrackToScroll(localPosition.dy - downPosition!.dy));
+      widget.physics.setScrollPosition(
+        downOffset! +
+            scrollbarPainter.getTrackToScroll(
+              localPosition.dy - downPosition!.dy,
+            ),
+      );
     }
     super.handleThumbPressUpdate(localPosition);
   }

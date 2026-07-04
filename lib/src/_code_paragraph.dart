@@ -1,4 +1,4 @@
-part of re_editor;
+part of 're_editor.dart';
 
 class _ParagraphImpl extends IParagraph {
   // Unicode value for a zero width joiner character.
@@ -20,9 +20,9 @@ class _ParagraphImpl extends IParagraph {
     required this.paragraph,
     required bool trucated,
     required double preferredLineHeight,
-  })  : _trucated = trucated,
-        _preferredLineHeight = preferredLineHeight,
-        _lineCount = (paragraph.height / preferredLineHeight).ceil();
+  }) : _trucated = trucated,
+       _preferredLineHeight = preferredLineHeight,
+       _lineCount = (paragraph.height / preferredLineHeight).ceil();
 
   int get runeLength => text.runes.length;
 
@@ -106,10 +106,12 @@ class _ParagraphImpl extends IParagraph {
       return Offset.zero;
     }
     if (position.affinity == TextAffinity.downstream) {
-      offset = _getOffsetDownstream(position.offset) ??
+      offset =
+          _getOffsetDownstream(position.offset) ??
           _getOffsetUpstream(position.offset);
     } else {
-      offset = _getOffsetUpstream(position.offset) ??
+      offset =
+          _getOffsetUpstream(position.offset) ??
           _getOffsetDownstream(position.offset);
     }
     (_offsets ??= {})[position] = offset;
@@ -125,8 +127,11 @@ class _ParagraphImpl extends IParagraph {
       return const [];
     }
     return paragraph
-        .getBoxesForRange(range.start, range.end,
-            boxHeightStyle: ui.BoxHeightStyle.max)
+        .getBoxesForRange(
+          range.start,
+          range.end,
+          boxHeightStyle: ui.BoxHeightStyle.max,
+        )
         .map((e) => e.toRect())
         .toList();
   }
@@ -137,14 +142,17 @@ class _ParagraphImpl extends IParagraph {
       return null;
     }
     // Check for multi-code-unit glyphs such as emojis or zero width joiner.
-    final int graphemeClusterLength = _isUtf16Surrogate(nextCodeUnit) ||
-            _isUnicodeDirectionality(nextCodeUnit) ||
-            codeUnitAt(position) == _zwjUtf16
-        ? 2
-        : 1;
+    final int graphemeClusterLength =
+        _isUtf16Surrogate(nextCodeUnit) ||
+                _isUnicodeDirectionality(nextCodeUnit) ||
+                codeUnitAt(position) == _zwjUtf16
+            ? 2
+            : 1;
     final List<TextBox> boxes = paragraph.getBoxesForRange(
-        position, position + graphemeClusterLength,
-        boxHeightStyle: ui.BoxHeightStyle.strut);
+      position,
+      position + graphemeClusterLength,
+      boxHeightStyle: ui.BoxHeightStyle.strut,
+    );
     if (boxes.isEmpty) {
       return null;
     }
@@ -157,14 +165,17 @@ class _ParagraphImpl extends IParagraph {
       return null;
     }
     // Check for multi-code-unit glyphs such as emojis or zero width joiner.
-    final int graphemeClusterLength = _isUtf16Surrogate(prevCodeUnit) ||
-            _isUnicodeDirectionality(prevCodeUnit) ||
-            codeUnitAt(position) == _zwjUtf16
-        ? 2
-        : 1;
+    final int graphemeClusterLength =
+        _isUtf16Surrogate(prevCodeUnit) ||
+                _isUnicodeDirectionality(prevCodeUnit) ||
+                codeUnitAt(position) == _zwjUtf16
+            ? 2
+            : 1;
     final List<TextBox> boxes = paragraph.getBoxesForRange(
-        position - graphemeClusterLength, position,
-        boxHeightStyle: ui.BoxHeightStyle.strut);
+      position - graphemeClusterLength,
+      position,
+      boxHeightStyle: ui.BoxHeightStyle.strut,
+    );
     if (boxes.isEmpty) {
       return null;
     }
@@ -217,18 +228,17 @@ class _CodeParagraphProvider {
       return;
     }
     _paragraphStyle = style.getParagraphStyle(
-        textAlign: TextAlign.left,
-        textDirection: TextDirection.ltr,
-        strutStyle: StrutStyle(
-          fontSize: style.fontSize,
-          fontFamily: style.fontFamily,
-          height: style.height,
-          forceStrutHeight: true,
-        ));
-    _style = uiStyle;
-    final TextPainter painter = TextPainter(
+      textAlign: TextAlign.left,
       textDirection: TextDirection.ltr,
+      strutStyle: StrutStyle(
+        fontSize: style.fontSize,
+        fontFamily: style.fontFamily,
+        height: style.height,
+        forceStrutHeight: true,
+      ),
     );
+    _style = uiStyle;
+    final TextPainter painter = TextPainter(textDirection: TextDirection.ltr);
     painter.text = TextSpan(text: '0', style: style);
     _preferredLineHeight = painter.preferredLineHeight;
     clearCache();
@@ -256,8 +266,11 @@ class _CodeParagraphProvider {
     final String plainText = span.toPlainText();
     final int? renderingLength = _maxLengthSingleLineRendering;
     if (renderingLength != null && plainText.length > renderingLength) {
-      impl = _build(trucate(span, renderingLength),
-          plainText.substring(0, renderingLength), true);
+      impl = _build(
+        trucate(span, renderingLength),
+        plainText.substring(0, renderingLength),
+        true,
+      );
     } else {
       impl = _build(span, plainText, false);
     }

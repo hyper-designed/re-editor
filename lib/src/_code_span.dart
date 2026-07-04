@@ -1,4 +1,4 @@
-part of re_editor;
+part of 're_editor.dart';
 
 @immutable
 class _MouseTrackerAnnotationTextSpan extends TextSpan {
@@ -14,13 +14,13 @@ class _MouseTrackerAnnotationTextSpan extends TextSpan {
 
   @override
   PointerEnterEventListener? get onEnter => (event) {
-        span.onEnterWithRect(event, id, rects);
-      };
+    span.onEnterWithRect(event, id, rects);
+  };
 
   @override
   PointerExitEventListener? get onExit => (event) {
-        span.onExitWithRect(event, id, rects);
-      };
+    span.onExitWithRect(event, id, rects);
+  };
 
   @override
   int get hashCode => span.hashCode;

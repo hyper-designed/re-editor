@@ -1,22 +1,25 @@
-part of re_editor;
+part of 're_editor.dart';
 
 class CodeChunkController extends ValueNotifier<List<CodeChunk>> {
   late final CodeLineEditingController _controller;
   final CodeChunkAnalyzer _analyzer;
 
   late final _IsolateTasker<_CodeChunkAnalyzePayload, _CodeChunkAnalyzeResult>
-      _tasker;
+  _tasker;
 
   late bool _shouldNotUpdateChunks;
 
   CodeChunkController(CodeLineEditingController controller, this._analyzer)
-      : super(const []) {
-    _controller = controller is _CodeLineEditingControllerDelegate
-        ? controller.delegate
-        : controller;
+    : super(const []) {
+    _controller =
+        controller is _CodeLineEditingControllerDelegate
+            ? controller.delegate
+            : controller;
     _controller.addListener(_onCodeChanged);
     _tasker = _IsolateTasker<_CodeChunkAnalyzePayload, _CodeChunkAnalyzeResult>(
-        'CodeChunk', _run);
+      'CodeChunk',
+      _run,
+    );
     _shouldNotUpdateChunks = false;
     _runChunkAnalyzeTask();
   }
@@ -39,8 +42,9 @@ class CodeChunkController extends ValueNotifier<List<CodeChunk>> {
       final CodeChunk e = codeChunks[i];
       if (e.index >= index || e.end >= index) {
         codeChunks[i] = CodeChunk(
-            e.index > index ? e.index - chunk.collapseSize : e.index,
-            e.end > index ? e.end - chunk.collapseSize : e.end);
+          e.index > index ? e.index - chunk.collapseSize : e.index,
+          e.end > index ? e.end - chunk.collapseSize : e.end,
+        );
       }
     }
     value = codeChunks;
@@ -61,8 +65,9 @@ class CodeChunkController extends ValueNotifier<List<CodeChunk>> {
       final CodeChunk e = codeChunks[i];
       if (e.index >= index || e.end >= index) {
         codeChunks[i] = CodeChunk(
-            e.index > index ? e.index + codeLine.chunks.length : e.index,
-            e.end > index ? e.end + codeLine.chunks.length : e.end);
+          e.index > index ? e.index + codeLine.chunks.length : e.index,
+          e.end > index ? e.end + codeLine.chunks.length : e.end,
+        );
       }
       if (e.index == index) {
         exists = true;
@@ -198,7 +203,7 @@ class DefaultCodeChunkAnalyzer implements CodeChunkAnalyzer {
   static const Map<String, String> _chunkSymbols = {
     '(': ')',
     '[': ']',
-    '{': '}'
+    '{': '}',
   };
   static final List<int> _tokens = '"\'()[]{}'.codeUnits;
 

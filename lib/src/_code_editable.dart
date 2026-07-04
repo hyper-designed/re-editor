@@ -1,4 +1,4 @@
-part of re_editor;
+part of 're_editor.dart';
 
 const double _kDefaultTextSize = 13.0;
 const double _kDefaultFontHeight = 1.4;
@@ -190,82 +190,91 @@ class _CodeEditableState extends State<_CodeEditable>
   Widget build(BuildContext context) {
     super.build(context);
     final Widget child = _CodeScrollable(
-        axisDirection: AxisDirection.down,
-        controller: widget.scrollController.verticalScroller,
-        viewportBuilder: (context, ViewportOffset vertical) {
-          Widget codeField;
-          if (widget.wordWrap) {
-            codeField = _buildCodeField(vertical, null);
-          } else {
-            codeField = _CodeScrollable(
-                axisDirection: AxisDirection.right,
-                controller: widget.scrollController.horizontalScroller,
-                viewportBuilder: (context, ViewportOffset horizontal) {
-                  return _buildCodeField(vertical, horizontal);
-                },
-                scrollbarBuilder: widget.scrollbarBuilder);
-          }
-          if (widget.controller.value.isInitial) {
-            final String? hint = widget.hint;
-            if (hint != null && hint.isNotEmpty) {
-              codeField = Stack(
-                children: [
-                  codeField,
-                  IgnorePointer(
-                      ignoring: true,
-                      child: Padding(
-                        padding: widget.padding,
-                        child: Text(
-                          hint,
-                          style: widget.textStyle
-                              .copyWith(color: widget.hintTextColor),
-                        ),
-                      ))
-                ],
-              );
-            }
-          }
-          final Widget? indicator = widget.indicatorBuilder?.call(
-              context,
-              widget.controller,
-              widget.chunkController,
-              _codeIndicatorValueNotifier);
-          return Container(
-            decoration: BoxDecoration(
-              border: widget.border,
-              color: widget.backgroundColor,
-              borderRadius: widget.borderRadius,
-            ),
-            clipBehavior: widget.clipBehavior,
-            margin: widget.margin,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (indicator != null) indicator,
-                if (widget.leadingDivider != null) widget.leadingDivider!,
-                Expanded(
-                  child: RepaintBoundary(
-                    child: CompositedTransformTarget(
-                        link: widget.toolbarLayerLink, child: codeField),
-                  ),
-                )
-              ],
-            ),
-          );
-        },
-        scrollbarBuilder: widget.scrollbarBuilder);
-    return CodeEditorTapRegion(
-        onTapOutside: (_) {
-          widget.focusNode.unfocus();
-        },
-        child: NotificationListener(
-            onNotification: (notification) {
-              if (notification is ScrollStartNotification) {
-                widget.selectionOverlayController.hideToolbar();
-              }
-              return false;
+      axisDirection: AxisDirection.down,
+      controller: widget.scrollController.verticalScroller,
+      viewportBuilder: (context, ViewportOffset vertical) {
+        Widget codeField;
+        if (widget.wordWrap) {
+          codeField = _buildCodeField(vertical, null);
+        } else {
+          codeField = _CodeScrollable(
+            axisDirection: AxisDirection.right,
+            controller: widget.scrollController.horizontalScroller,
+            viewportBuilder: (context, ViewportOffset horizontal) {
+              return _buildCodeField(vertical, horizontal);
             },
-            child: child));
+            scrollbarBuilder: widget.scrollbarBuilder,
+          );
+        }
+        if (widget.controller.value.isInitial) {
+          final String? hint = widget.hint;
+          if (hint != null && hint.isNotEmpty) {
+            codeField = Stack(
+              children: [
+                codeField,
+                IgnorePointer(
+                  ignoring: true,
+                  child: Padding(
+                    padding: widget.padding,
+                    child: Text(
+                      hint,
+                      style: widget.textStyle.copyWith(
+                        color: widget.hintTextColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+        }
+        final Widget? indicator = widget.indicatorBuilder?.call(
+          context,
+          widget.controller,
+          widget.chunkController,
+          _codeIndicatorValueNotifier,
+        );
+        return Container(
+          decoration: BoxDecoration(
+            border: widget.border,
+            color: widget.backgroundColor,
+            borderRadius: widget.borderRadius,
+          ),
+          clipBehavior: widget.clipBehavior,
+          margin: widget.margin,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (indicator != null) indicator,
+              if (widget.leadingDivider != null) widget.leadingDivider!,
+              Expanded(
+                child: RepaintBoundary(
+                  child: CompositedTransformTarget(
+                    link: widget.toolbarLayerLink,
+                    child: codeField,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      scrollbarBuilder: widget.scrollbarBuilder,
+    );
+    return CodeEditorTapRegion(
+      onTapOutside: (_) {
+        widget.focusNode.unfocus();
+      },
+      child: NotificationListener(
+        onNotification: (notification) {
+          if (notification is ScrollStartNotification) {
+            widget.selectionOverlayController.hideToolbar();
+          }
+          return false;
+        },
+        child: child,
+      ),
+    );
   }
 
   Widget _buildCodeField(ViewportOffset vertical, ViewportOffset? horizontal) {
@@ -287,8 +296,9 @@ class _CodeEditableState extends State<_CodeEditable>
       floatingCursorNotifier: widget.floatingCursorController,
       onRenderParagraphsChanged: (paragraphs) {
         _codeIndicatorValueNotifier.value = CodeIndicatorValue(
-            paragraphs: paragraphs,
-            focusedIndex: widget.controller.selection.extentIndex);
+          paragraphs: paragraphs,
+          focusedIndex: widget.controller.selection.extentIndex,
+        );
       },
       selectionColor: widget.selectionColor,
       highlightColor: widget.highlightColor,
@@ -299,9 +309,10 @@ class _CodeEditableState extends State<_CodeEditable>
       padding: widget.padding,
       readOnly: widget.readOnly,
       // Enable long text rendering when the find is on.
-      maxLengthSingleLineRendering: widget.findController.value != null
-          ? null
-          : widget.maxLengthSingleLineRendering,
+      maxLengthSingleLineRendering:
+          widget.findController.value != null
+              ? null
+              : widget.maxLengthSingleLineRendering,
       startHandleLayerLink: widget.startHandleLayerLink,
       endHandleLayerLink: widget.endHandleLayerLink,
     );
@@ -368,9 +379,12 @@ class _CodeEditableState extends State<_CodeEditable>
     }
     widget.controller.selection = currentMatch;
     if (currentMatch.isSameLine) {
-      widget.controller.makePositionCenterIfInvisible(CodeLinePosition(
+      widget.controller.makePositionCenterIfInvisible(
+        CodeLinePosition(
           index: currentMatch.start.index,
-          offset: (currentMatch.startOffset + currentMatch.endOffset) >> 1));
+          offset: (currentMatch.startOffset + currentMatch.endOffset) >> 1,
+        ),
+      );
     } else {
       widget.controller.makePositionCenterIfInvisible(currentMatch.start);
     }
@@ -409,36 +423,41 @@ class _CodeEditableState extends State<_CodeEditable>
       autocompleteState.dismiss();
       return;
     }
-    final _CodeFieldRender? render = widget.editorKey.currentContext
-        ?.findRenderObject() as _CodeFieldRender?;
+    final _CodeFieldRender? render =
+        widget.editorKey.currentContext?.findRenderObject()
+            as _CodeFieldRender?;
     if (render == null) {
       autocompleteState.dismiss();
       return;
     }
     final Offset? position = render.calculateTextPositionScreenOffset(
-        widget.controller.selection.extent, true);
+      widget.controller.selection.extent,
+      true,
+    );
     if (position == null) {
       autocompleteState.dismiss();
       return;
     }
     autocompleteState.show(
-        layerLink: widget.startHandleLayerLink,
-        position: position,
-        lineHeight: render.lineHeight,
-        value: widget.controller.value,
-        onAutocomplete: (value) {
-          autocompleteState?.dismiss();
-          final CodeLineSelection selection = widget.controller.selection;
-          widget.controller.replaceSelection(
-              value.word,
-              selection.copyWith(
-                baseOffset: selection.baseOffset - value.input.length,
-              ));
-          widget.controller.selection = selection.copyWith(
-            baseOffset: selection.baseOffset + value.selection.baseOffset,
-            extentOffset: selection.extentOffset + value.selection.extentOffset,
-          );
-        });
+      layerLink: widget.startHandleLayerLink,
+      position: position,
+      lineHeight: render.lineHeight,
+      value: widget.controller.value,
+      onAutocomplete: (value) {
+        autocompleteState?.dismiss();
+        final CodeLineSelection selection = widget.controller.selection;
+        widget.controller.replaceSelection(
+          value.word,
+          selection.copyWith(
+            baseOffset: selection.baseOffset - value.input.length,
+          ),
+        );
+        widget.controller.selection = selection.copyWith(
+          baseOffset: selection.baseOffset + value.selection.baseOffset,
+          extentOffset: selection.extentOffset + value.selection.extentOffset,
+        );
+      },
+    );
   }
 }
 
